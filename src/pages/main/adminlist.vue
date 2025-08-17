@@ -27,8 +27,9 @@
             style="width: 100%">
             <el-table-column label="唯一ID" prop="id"> </el-table-column>
             <el-table-column label="公司id" prop="companyid"></el-table-column>
+            <el-table-column label="头像" prop="avatar"> </el-table-column>
             <el-table-column label="名称" prop="name"> </el-table-column>
-            <!-- <el-table-column label="权限" prop="level"> </el-table-column> -->
+            <el-table-column label="权限" prop="level"> </el-table-column>
             <el-table-column label="状态" prop="statu"> </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
           </el-table>

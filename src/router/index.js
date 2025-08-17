@@ -5,13 +5,10 @@ import login from '@/pages/login/login'
 import mainpage from '@/components/mainPage'
 
 import adminlist from '@/pages/main/adminlist'
-import companylist from '@/pages/main/companylist'
-import contractlist from '@/pages/main/contractlist'
-import bankcardlist from '@/pages/main/bankcardlist'
 import globallist from '@/pages/main/globallist'
-import orderlist from '@/pages/main/orderlist'
-import bankorderlist from '@/pages/main/bankorderlist'
-
+import actionlist from '@/pages/main/actionlist'
+import activitylist from '@/pages/main/activitylist'
+import machinelist from '@/pages/main/machinelist'
 
 const routes = [
 	{
@@ -36,29 +33,21 @@ const routes = [
 			component: adminlist,
 			meta: ['管理员列表'],
 		},{
-			path: '/companylist',
-			component: companylist,
-			meta: ['公司列表'],
-		},{
-			path: '/contractlist',
-			component: contractlist,
-			meta: ['合约列表'],
-		},{
-			path: '/bankcardlist',
-			component: bankcardlist,
-			meta: ['合约列表'],
-		},{
 			path: '/globallist',
 			component: globallist,
 			meta: ['全局变量列表'],
 		},{
-			path: '/orderlist',
-			component: orderlist,
-			meta: ['待付账单列表'],
+			path: '/actionlist',
+			component: actionlist,
+			meta: ['机器动作列表'],
 		},{
-			path: '/bankorderlist',
-			component: bankorderlist,
-			meta: ['银行账单列表'],
+			path: '/activitylist',
+			component: activitylist,
+			meta: ['活动列表'],
+		},{
+			path: '/machinelist',
+			component: machinelist,
+			meta: ['设备列表'],
 		}
 	]},
 

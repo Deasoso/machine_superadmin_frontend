@@ -1,7 +1,7 @@
 <template>
   <div class="pageborder">
     <div class="pageback">
-      <envir-page-name style="background-color: #ffffff;" :noBack="true" pageName="公司查询" />
+      <envir-page-name style="background-color: #ffffff;" :noBack="true" pageName="银行卡查询" />
       <div class="pagepadding">
         <el-button
           size="small"
@@ -12,34 +12,18 @@
           size="small"
           type="warning"
           style="margin-left: 16px;margin-bottom: 16px;"
-          @click="newDialog = true">新增/修改公司信息</el-button>
-        <div>
-          <el-tag style="margin-left: 16px;margin-bottom: 16px;" v-for="tag, tagindex in searchObj" 
-            :key="tagindex" closable :type="warning" @close="() => { delete searchObj[tagindex]; getList(); }">
-            {{ (searchNameList.find(item => item.label == tagindex)).name + '：' + ((searchNameList.find(item => item.label == tagindex)).list ? 
-              (searchNameList.find(item => item.label == tagindex)).list.find(item => item.value == tag).name : tag) }}
-          </el-tag>
-        </div>
+          @click="newDialog = true">新增/修改银行卡</el-button>
         <div v-loading="loading">
           <el-table
             :data="tableData"
             :row-key="row => row.id"
             style="width: 100%">
             <el-table-column label="唯一ID" prop="id"> </el-table-column>
-            <el-table-column label="创建者id" prop="adminid"> </el-table-column>
-            <el-table-column label="公司名" prop="name"> </el-table-column>
-            <el-table-column label="公司全名" prop="fullname"> </el-table-column>
-            <el-table-column label="总计资金" prop="money"> </el-table-column>
-            <el-table-column label="创建时间" prop="timestamp">
-              <template #default="scope">
-                {{ timestamptodate(scope.row.timestamp) }}
-              </template>
-            </el-table-column>
-            <el-table-column label="状态" prop="statu">
-              <template #default="scope">
-                {{ statulist.find(item => item.value == scope.row.statu).name }}
-              </template>
-            </el-table-column>
+            <el-table-column label="创建人id" prop="adminid"> </el-table-column>
+            <el-table-column label="管理员id列表" prop="adminidlist"> </el-table-column>
+            <el-table-column label="名称" prop="name"> </el-table-column>
+            <el-table-column label="设备id列表" prop="machineidlist"> </el-table-column>
+            <el-table-column label="状态" prop="statu"> </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
           </el-table>
         </div>
@@ -105,12 +89,6 @@ const params = ref({
   pagesize: 10
 });
 
-const statulist = ref([
-  {name: '正常', value: 0}, 
-  {name: '冻结', value: 1}, 
-  {name: '注销', value: 2}
-]);
-
 const tableData = ref([]);
 const allamount = ref(0);
 const loading = ref(false);
@@ -124,16 +102,12 @@ const newDialog = ref(false);
 
 onMounted(async () => {
   searchNameList.value = [];
-  searchNameList.value.push({name: '唯一id',label: 'id'});
-  searchNameList.value.push({name: '创建人id',label: 'adminid'});
-  searchNameList.value.push({name: '状态',label: 'statu',
-    list: statulist.value });
+  searchNameList.value.push({name: '公司id',label: 'companyid'});
   userNameList.value = [];
   userNameList.value.push({name: '唯一id，不填则新增',label: 'id'});
+  userNameList.value.push({name: '公司id',label: 'companyid'});
   userNameList.value.push({name: '名称',label: 'name'});
-  userNameList.value.push({name: '公司全名',label: 'fullname'});
-  userNameList.value.push({name: '状态',label: 'statu',
-    list: statulist.value });
+  userNameList.value.push({name: '银行处卡号',label: 'bankcardid'});
   userNameList.value.push({name: '备注',label: 'tip'});
   await getList();
 })
@@ -163,7 +137,7 @@ const getList = async () => {
       postbody.limit = params.value.pagesize;
     } 
     postbody.searchObj = searchObj.value;
-    const { result } = await api.post('/searchcompany', postbody);
+    const { result } = await api.post('/searchbankcard', postbody);
     console.log(result);
     tableData.value = result.rows;
     allamount.value = result.count;
@@ -176,7 +150,7 @@ const getList = async () => {
 const newUser = async () => {
   try{
     newLoading.value = true;
-    const result = await api.post('/addcompany', {
+    const result = await api.post('/addbankcard', {
       obj: userInfoObj.value
     });
     console.log(result);

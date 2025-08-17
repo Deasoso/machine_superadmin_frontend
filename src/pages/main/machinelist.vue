@@ -1,7 +1,7 @@
 <template>
   <div class="pageborder">
     <div class="pageback">
-      <envir-page-name style="background-color: #ffffff;" :noBack="true" pageName="账单查询" />
+      <envir-page-name style="background-color: #ffffff;" :noBack="true" pageName="银行卡查询" />
       <div class="pagepadding">
         <el-button
           size="small"
@@ -12,31 +12,17 @@
           size="small"
           type="warning"
           style="margin-left: 16px;margin-bottom: 16px;"
-          @click="newDialog = true">新增/修改账单</el-button>
-        <el-tabs v-model="activeIndex" class="demo-tabs" @tab-click="handleClick">
-          <el-tab-pane v-for="(item, index) in tabList" :key="index" :label="item" :name="index"></el-tab-pane>
-        </el-tabs>
+          @click="newDialog = true">新增/修改银行卡</el-button>
         <div v-loading="loading">
           <el-table
             :data="tableData"
             :row-key="row => row.id"
             style="width: 100%">
             <el-table-column label="唯一ID" prop="id"> </el-table-column>
-            <el-table-column label="创建用户id" prop="adminid"> </el-table-column>
-            <el-table-column label="创建公司id" prop="companyid"> </el-table-column>
-            <el-table-column label="合约id" prop="contractid"> </el-table-column>
-            <el-table-column label="总资金" prop="money"> </el-table-column>
-            <el-table-column label="账单备注字符串" prop="orderstr"> </el-table-column>
-            <el-table-column label="生效时间" prop="timestamp">
-              <template #default="scope">
-                {{ timestamptodate(scope.row.timestamp) }}
-              </template>
-            </el-table-column>
-            <el-table-column label="结清时间" prop="endtimestamp">
-              <template #default="scope">
-                {{ timestamptodate(scope.row.endtimestamp) }}
-              </template>
-            </el-table-column>
+            <el-table-column label="创建人id" prop="adminid"> </el-table-column>
+            <el-table-column label="名称" prop="name"> </el-table-column>
+            <el-table-column label="设备ip" prop="ip"> </el-table-column>
+            <el-table-column label="动作编号列表" prop="actionlist"> </el-table-column>
             <el-table-column label="状态" prop="statu"> </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
           </el-table>
@@ -116,9 +102,13 @@ const newDialog = ref(false);
 
 onMounted(async () => {
   searchNameList.value = [];
-  searchNameList.value.push({name: '成员id',label: 'tableid'});
+  searchNameList.value.push({name: '公司id',label: 'companyid'});
   userNameList.value = [];
   userNameList.value.push({name: '唯一id，不填则新增',label: 'id'});
+  userNameList.value.push({name: '公司id',label: 'companyid'});
+  userNameList.value.push({name: '名称',label: 'name'});
+  userNameList.value.push({name: '银行处卡号',label: 'bankcardid'});
+  userNameList.value.push({name: '备注',label: 'tip'});
   await getList();
 })
 
@@ -147,7 +137,7 @@ const getList = async () => {
       postbody.limit = params.value.pagesize;
     } 
     postbody.searchObj = searchObj.value;
-    const { result } = await api.post('/searchorder', postbody);
+    const { result } = await api.post('/searchbankcard', postbody);
     console.log(result);
     tableData.value = result.rows;
     allamount.value = result.count;
@@ -160,7 +150,7 @@ const getList = async () => {
 const newUser = async () => {
   try{
     newLoading.value = true;
-    const result = await api.post('/addorder', {
+    const result = await api.post('/addbankcard', {
       obj: userInfoObj.value
     });
     console.log(result);
@@ -173,21 +163,6 @@ const newUser = async () => {
     console.error(e);
     newLoading.value = false;
   }
-}
-
-const activeIndex = ref(0);
-const tabKey = ref('statu');
-const tabList = ref(['全部', '已结清', '到期未结', '未到期', '收款过多']);
-const tabValueList = ref([0, 0, 1, 2, 3]);
-
-const handleClick = (tab) => {
-  if(tab.index == 0){
-    delete searchObj.value[tabKey.value];
-  }else{
-    searchObj.value[tabKey.value] = tabValueList.value[tab.index];
-  }
-  getList();
-  console.log(searchObj.value);
 }
 
 const timestamptodate = (timestamp) => {

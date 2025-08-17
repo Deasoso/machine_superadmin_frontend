@@ -29,22 +29,14 @@ export default [{
   "route": "globallist",
 },{
   "icon": "el-icon-user-solid",
-  "name": "公司列表",
-  "route": "companylist",
+  "name": "动作列表",
+  "route": "actionlist",
 },{
   "icon": "el-icon-user-solid",
-  "name": "银行卡列表",
-  "route": "bankcardlist",
+  "name": "活动列表",
+  "route": "activitylist",
 },{
   "icon": "el-icon-user-solid",
-  "name": "合约列表",
-  "route": "contractlist",
-},{
-  "icon": "el-icon-user-solid",
-  "name": "账单列表",
-  "route": "orderlist",
-},{
-  "icon": "el-icon-user-solid",
-  "name": "银行账单列表",
-  "route": "bankorderlist",
+  "name": "设备列表",
+  "route": "machinelist",
 }]
