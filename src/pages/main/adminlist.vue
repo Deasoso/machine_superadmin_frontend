@@ -26,7 +26,6 @@
             :row-key="row => row.id"
             style="width: 100%">
             <el-table-column label="唯一ID" prop="id"> </el-table-column>
-            <el-table-column label="公司id" prop="companyid"></el-table-column>
             <el-table-column label="头像" prop="avatar"> </el-table-column>
             <el-table-column label="名称" prop="name"> </el-table-column>
             <el-table-column label="权限" prop="level"> </el-table-column>
@@ -127,7 +126,6 @@ onMounted(async () => {
   userNameList.value.push({name: '唯一id，不填则新增',label: 'id'});
   userNameList.value.push({name: '用户名',label: 'username'});
   userNameList.value.push({name: '密码',label: 'pw'});
-  userNameList.value.push({name: '公司id',label: 'companyid'});
   userNameList.value.push({name: '名称',label: 'name'});
   // userNameList.value.push({name: '权限等级',label: 'level'});
   userNameList.value.push({name: '状态',label: 'statu',

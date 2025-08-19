@@ -3,7 +3,7 @@
 		<div class="loginwindow">
 			<div class="rightback" v-loading="loading">
 				<div class="welcometext">
-					欢迎登录资金管理系统
+					欢迎登录机械臂系统后台
 				</div>
 				<el-input placeholder="请输入账号" v-model="username" class="idinput">
 					<i style="color:#3a62d7;" slot="prepend" class="el-icon-user-solid"></i>
@@ -47,7 +47,7 @@ export default {
 				localStorage.removeItem("school_superadmin_userInfo");
 				localStorage.setItem('school_superadmin_userInfo', userinfo.token);
 				this.$message.success('登录成功');
-				this.$router.push('/globallist');
+				this.$router.push('/adminlist');
 				this.loading = false;
 			}catch(e){
 				console.error(e);

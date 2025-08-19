@@ -1,7 +1,7 @@
 <template>
   <div class="pageborder">
     <div class="pageback">
-      <envir-page-name style="background-color: #ffffff;" :noBack="true" pageName="银行卡查询" />
+      <envir-page-name style="background-color: #ffffff;" :noBack="true" pageName="活动查询" />
       <div class="pagepadding">
         <el-button
           size="small"
@@ -12,7 +12,7 @@
           size="small"
           type="warning"
           style="margin-left: 16px;margin-bottom: 16px;"
-          @click="newDialog = true">新增/修改银行卡</el-button>
+          @click="newDialog = true">新增/修改活动</el-button>
         <div v-loading="loading">
           <el-table
             :data="tableData"
@@ -105,9 +105,10 @@ onMounted(async () => {
   searchNameList.value.push({name: '公司id',label: 'companyid'});
   userNameList.value = [];
   userNameList.value.push({name: '唯一id，不填则新增',label: 'id'});
-  userNameList.value.push({name: '公司id',label: 'companyid'});
   userNameList.value.push({name: '名称',label: 'name'});
-  userNameList.value.push({name: '银行处卡号',label: 'bankcardid'});
+  userNameList.value.push({name: '活动执行人列表',label: 'adminidlist'});
+  userNameList.value.push({name: '设备列表',label: 'machineidlist'});
+  userNameList.value.push({name: '状态',label: 'statu'});
   userNameList.value.push({name: '备注',label: 'tip'});
   await getList();
 })
@@ -137,7 +138,7 @@ const getList = async () => {
       postbody.limit = params.value.pagesize;
     } 
     postbody.searchObj = searchObj.value;
-    const { result } = await api.post('/searchbankcard', postbody);
+    const { result } = await api.post('/searchactivity', postbody);
     console.log(result);
     tableData.value = result.rows;
     allamount.value = result.count;
@@ -150,7 +151,7 @@ const getList = async () => {
 const newUser = async () => {
   try{
     newLoading.value = true;
-    const result = await api.post('/addbankcard', {
+    const result = await api.post('/addactivity', {
       obj: userInfoObj.value
     });
     console.log(result);
