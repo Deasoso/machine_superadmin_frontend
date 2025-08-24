@@ -9,7 +9,7 @@
 			active-text-color="">
 			<el-menu-item class="menu_ajgl_border">
 				<!-- <img slot="title" class="logopic" :src="Global.imageUrl + '/xjlogo.png'"/> -->
-				<span style="margin-left: 32px;">简易资金管理系统</span>
+				<span style="margin-left: 32px;">简易机械管理系统</span>
 			</el-menu-item>
 			<div style="min-height: calc(100vh - 56px);">
 				<!-- deaso tip: 不想写递归，这里默认地址最多2级 -->

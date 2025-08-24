@@ -3,7 +3,7 @@
 		<i class="el-icon-s-fold" @click="clickMenuChange"></i>
 		<div style="margin-left:16px;">
 			<el-breadcrumb separator="/">
-				<el-breadcrumb-item :to="{ path: '/mainpage' }">资金管理</el-breadcrumb-item>
+				<el-breadcrumb-item :to="{ path: '/mainpage' }">机械管理</el-breadcrumb-item>
 				<el-breadcrumb-item v-for="(item, index) in $route.meta" :key="index">{{item}}</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>

@@ -33,10 +33,10 @@ export default [{
   "route": "actionlist",
 },{
   "icon": "el-icon-user-solid",
-  "name": "活动列表",
-  "route": "activitylist",
-},{
-  "icon": "el-icon-user-solid",
   "name": "设备列表",
   "route": "machinelist",
+},{
+  "icon": "el-icon-user-solid",
+  "name": "活动列表",
+  "route": "activitylist",
 }]

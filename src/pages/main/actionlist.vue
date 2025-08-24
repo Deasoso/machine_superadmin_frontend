@@ -20,8 +20,13 @@
             style="width: 100%">
             <el-table-column label="唯一ID" prop="id"> </el-table-column>
             <el-table-column label="创建人id" prop="adminid"> </el-table-column>
+            <el-table-column label="设备种类" prop="type">
+              <template #default="scope">
+                {{ statulist.find(item => item.value == scope.row.type).name }}
+              </template>
+            </el-table-column>
             <el-table-column label="名称" prop="name"> </el-table-column>
-            <el-table-column label="动作id" prop="actionid"> </el-table-column>
+            <el-table-column label="动作名字" prop="actionid"> </el-table-column>
             <el-table-column label="背景图片" prop="imageurl"> </el-table-column>
             <el-table-column label="图标" prop="iconurl"> </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
@@ -57,7 +62,7 @@
         <el-button type="primary" @click="search()">搜 索</el-button>
       </div>
     </el-dialog>
-    <el-dialog :close-on-click-modal="false" title="新增/修改公司" v-model="newDialog" v-loading="newLoading">
+    <el-dialog :close-on-click-modal="false" title="新增/修改动作" v-model="newDialog" v-loading="newLoading">
       <div v-for="(user, index2) in userNameList" :key="index2">
         <el-input placeholder="请输入内容" v-model="userInfoObj[user.label]" style="margin:5px;" v-if="!user.list"
           :show-password="(user.label == 'password' || user.label == 'confirmPassword' || user.label == 'pw' ) ? true : false">
@@ -89,6 +94,11 @@ const params = ref({
   pagesize: 10
 });
 
+const statulist = ref([
+  {name: '乐白机械臂', value: 0}, 
+  {name: '法奥机械臂', value: 1}, 
+]);
+
 const tableData = ref([]);
 const allamount = ref(0);
 const loading = ref(false);
@@ -102,11 +112,13 @@ const newDialog = ref(false);
 
 onMounted(async () => {
   searchNameList.value = [];
-  searchNameList.value.push({name: '公司id',label: 'companyid'});
+  searchNameList.value.push({name: '状态',label: 'statu'});
   userNameList.value = [];
   userNameList.value.push({name: '唯一id，不填则新增',label: 'id'});
   userNameList.value.push({name: '名称',label: 'name'});
-  userNameList.value.push({name: '执行id',label: 'actionid'});
+  userNameList.value.push({name: '设备种类',label: 'type',
+    list: statulist.value });
+  userNameList.value.push({name: '执行名称',label: 'actionid'});
   userNameList.value.push({name: '大图像',label: 'imageurl'});
   userNameList.value.push({name: '小图标',label: 'iconurl'});
   userNameList.value.push({name: '备注',label: 'tip'});

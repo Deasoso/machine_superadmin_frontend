@@ -54,7 +54,7 @@
         <el-button type="primary" @click="search()">搜 索</el-button>
       </div>
     </el-dialog>
-    <el-dialog :close-on-click-modal="false" title="新增/修改公司" v-model="newDialog" v-loading="newLoading">
+    <el-dialog :close-on-click-modal="false" title="新增/修改全局变量" v-model="newDialog" v-loading="newLoading">
       <div v-for="(user, index2) in userNameList" :key="index2">
         <el-input placeholder="请输入内容" v-model="userInfoObj[user.label]" style="margin:5px;" v-if="!user.list"
           :show-password="(user.label == 'password' || user.label == 'confirmPassword' || user.label == 'pw' ) ? true : false">

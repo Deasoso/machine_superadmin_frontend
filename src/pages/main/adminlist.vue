@@ -13,6 +13,9 @@
           type="warning"
           style="margin-left: 16px;margin-bottom: 16px;"
           @click="newDialog = true">新增/修改管理员</el-button>
+        <el-tabs v-model="activeIndex" class="demo-tabs" @tab-click="handleClick">
+          <el-tab-pane v-for="(item, index) in tabList" :key="index" :label="item" :name="index"></el-tab-pane>
+        </el-tabs>
         <div>
           <el-tag style="margin-left: 16px;margin-bottom: 16px;" v-for="tag, tagindex in searchObj" 
             :key="tagindex" closable :type="warning" @close="() => { delete searchObj[tagindex]; getList(); }">
@@ -26,10 +29,14 @@
             :row-key="row => row.id"
             style="width: 100%">
             <el-table-column label="唯一ID" prop="id"> </el-table-column>
-            <el-table-column label="头像" prop="avatar"> </el-table-column>
+            <!-- <el-table-column label="头像" prop="avatar"> </el-table-column> -->
             <el-table-column label="名称" prop="name"> </el-table-column>
-            <el-table-column label="权限" prop="level"> </el-table-column>
-            <el-table-column label="状态" prop="statu"> </el-table-column>
+            <!-- <el-table-column label="权限" prop="level"> </el-table-column> -->
+            <el-table-column label="状态" prop="statu">
+              <template #default="scope">
+                {{ statulist.find(item => item.value == scope.row.statu).name }}
+              </template>
+            </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
           </el-table>
         </div>
@@ -63,7 +70,7 @@
         <el-button type="primary" @click="search()">搜 索</el-button>
       </div>
     </el-dialog>
-    <el-dialog :close-on-click-modal="false" title="新增/修改公司" v-model="newDialog" v-loading="newLoading">
+    <el-dialog :close-on-click-modal="false" title="新增/修改管理员" v-model="newDialog" v-loading="newLoading">
       <div v-for="(user, index2) in userNameList" :key="index2">
         <el-input placeholder="请输入内容" v-model="userInfoObj[user.label]" style="margin:5px;" v-if="!user.list"
           :show-password="(user.label == 'password' || user.label == 'confirmPassword' || user.label == 'pw' ) ? true : false">
@@ -160,7 +167,7 @@ const getList = async () => {
     } 
     postbody.searchObj = searchObj.value;
     console.log(searchObj.value);
-    const { result } = await api.post('/searcadmin', postbody);
+    const { result } = await api.post('/searchadmin', postbody);
     console.log(result);
     tableData.value = result.rows;
     allamount.value = result.count;
@@ -188,6 +195,22 @@ const newUser = async () => {
     newLoading.value = false;
   }
 }
+
+const activeIndex = ref(0);
+const tabKey = ref('statu');
+const tabList = ref(['全部', '正常', '冻结', '注销']);
+const tabValueList = ref([0, 0, 1, 2]);
+
+const handleClick = (tab) => {
+  if(tab.index == 0){
+    delete searchObj.value[tabKey.value];
+  }else{
+    searchObj.value[tabKey.value] = tabValueList.value[tab.index];
+  }
+  getList();
+  console.log(searchObj.value);
+}
+
 
 const timestamptodate = (timestamp) => {
   if(!timestamp) return "";

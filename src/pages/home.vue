@@ -3,7 +3,7 @@
     <div class="pageback">
       <envir-page-name style="background-color: #ffffff;" :noBack="true" pageName="首页" />
       <div class="pageinpadding">
-        <div style="margin-left: 16px;">欢迎来到简易资金管理系统！</div>
+        <div style="margin-left: 16px;">欢迎来到简易机械管理系统！</div>
         <!-- <div class="search">
           <el-row>
             <el-col :span="12">
