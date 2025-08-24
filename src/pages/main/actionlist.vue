@@ -112,7 +112,7 @@ const newDialog = ref(false);
 
 onMounted(async () => {
   searchNameList.value = [];
-  searchNameList.value.push({name: '状态',label: 'statu'});
+  searchNameList.value.push({name: '状态',label: 'statu', list: statulist.value });
   userNameList.value = [];
   userNameList.value.push({name: '唯一id，不填则新增',label: 'id'});
   userNameList.value.push({name: '名称',label: 'name'});

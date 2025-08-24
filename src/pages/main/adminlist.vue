@@ -122,13 +122,7 @@ const newDialog = ref(false);
 
 onMounted(async () => {
   searchNameList.value = [];
-  searchNameList.value.push({name: '唯一id',label: 'id'});
-  searchNameList.value.push({name: '公司id',label: 'companyid'});
-  searchNameList.value.push({name: '名称',label: 'name'});
-  searchNameList.value.push({name: '状态',label: 'statu',
-    list: statulist.value });
-  // searchNameList.value.push({name: '权限等级',label: 'level'});
-  searchNameList.value.push({name: '备注',label: 'tip'});
+  searchNameList.value.push({name: '状态',label: 'statu', list: statulist.value });
   userNameList.value = [];
   userNameList.value.push({name: '唯一id，不填则新增',label: 'id'});
   userNameList.value.push({name: '用户名',label: 'username'});
