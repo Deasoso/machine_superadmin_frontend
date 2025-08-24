@@ -13,7 +13,7 @@ const login = async function(url, data){
 }
 
 const post = async function(url, data){
-  const userinfo = localStorage.getItem("school_superadmin_userInfo");
+  const userinfo = localStorage.getItem("machine_superadmin_userInfo");
   if(!userinfo){
     ElMessage('请先登录！')
     throw('未登录')
@@ -23,7 +23,7 @@ const post = async function(url, data){
     data,
     {
       headers: {
-        'token': localStorage.getItem("school_superadmin_userInfo"),
+        'token': localStorage.getItem("machine_superadmin_userInfo"),
         logintype: 3
       }
     }

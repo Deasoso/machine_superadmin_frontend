@@ -39,13 +39,13 @@ export default {
 			try{
 				userinfo = await api.login("/loginadmin", {
 					username: this.username,
-					password: CryptoJS.SHA1(this.password + 'school_pw').toString(),
+					password: CryptoJS.SHA1(this.password + 'machine_pw').toString(),
 					logintype: 3
 				});
 				console.log(userinfo);
 				// console.info(JSON.stringify(userinfo.data).replace(/,/g, ",\n")) // 转成json，方便复制
-				localStorage.removeItem("school_superadmin_userInfo");
-				localStorage.setItem('school_superadmin_userInfo', userinfo.token);
+				localStorage.removeItem("machine_superadmin_userInfo");
+				localStorage.setItem('machine_superadmin_userInfo', userinfo.token);
 				this.$message.success('登录成功');
 				this.$router.push('/adminlist');
 				this.loading = false;

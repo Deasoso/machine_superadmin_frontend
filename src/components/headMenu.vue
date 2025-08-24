@@ -55,7 +55,7 @@ export default {
 			this.$router.push('/home')
 		},
 		logout(){
-			localStorage.removeItem("school_superadmin_userInfo");
+			localStorage.removeItem("machine_superadmin_userInfo");
 			this.$router.replace('/login')
 		}
 	}

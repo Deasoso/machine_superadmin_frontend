@@ -180,7 +180,7 @@ const getList = async () => {
 const newUser = async () => {
   try{
     newLoading.value = true;
-    userInfoObj.value.password = CryptoJS.SHA1(userInfoObj.value.pw + 'school_pw').toString();
+    userInfoObj.value.password = CryptoJS.SHA1(userInfoObj.value.pw + 'machine_pw').toString();
     const result = await api.post('/changeadmin', {
       obj: userInfoObj.value
     });

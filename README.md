@@ -1,4 +1,4 @@
-# school_superadmin_frontend
+# machine_superadmin_frontend
 
 ## Project setup
 ```
