@@ -9,6 +9,7 @@ import globallist from '@/pages/main/globallist'
 import actionlist from '@/pages/main/actionlist'
 import activitylist from '@/pages/main/activitylist'
 import machinelist from '@/pages/main/machinelist'
+import uploadpic from '@/pages/main/uploadpic'
 
 const routes = [
 	{
@@ -47,6 +48,10 @@ const routes = [
 		},{
 			path: '/machinelist',
 			component: machinelist,
+			meta: ['设备列表'],
+		},{
+			path: '/uploadpic',
+			component: uploadpic,
 			meta: ['设备列表'],
 		}
 	]},

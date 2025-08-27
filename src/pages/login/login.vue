@@ -1,5 +1,5 @@
 <template>
-	<div class="loginback" :style="'background: url(\'http://ymsjimg.deaso40.com/outs/red_back.jpg\');background-size: cover;'">
+	<div class="loginback" :style="'background: url(\'https://www.hnie.edu.cn/__local/B/C7/35/2FADD5D1C08C5B746540CD675F1_FA1037AA_A508F.jpg\');background-size: cover;'">
 		<div class="loginwindow">
 			<div class="rightback" v-loading="loading">
 				<div class="welcometext">

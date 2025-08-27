@@ -38,6 +38,7 @@
                 {{ statulist.find(item => item.value == scope.row.statu).name }}
               </template>
             </el-table-column>
+            <el-table-column label="背景图url" prop="imageurl"> </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
           </el-table>
         </div>
@@ -145,6 +146,7 @@ onMounted(async () => {
   userNameList.value.push({name: '状态',label: 'statu',
     list: statulist.value
   });
+  userNameList.value.push({name: '背景图',label: 'imageurl'});
   userNameList.value.push({name: '备注',label: 'tip'});
   await getList();
   await getAdminList();
