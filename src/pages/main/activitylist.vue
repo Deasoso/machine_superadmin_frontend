@@ -3,11 +3,11 @@
     <div class="pageback">
       <envir-page-name style="background-color: #ffffff;" :noBack="true" pageName="活动查询" />
       <div class="pagepadding">
-        <el-button
+        <!-- <el-button
           size="small"
           type="success"
           style="margin-left: 16px;margin-bottom: 16px;"
-          @click="searchDialog = true">筛选设置</el-button>
+          @click="searchDialog = true">筛选设置</el-button> -->
         <el-button
           size="small"
           type="warning"
@@ -38,8 +38,33 @@
                 {{ statulist.find(item => item.value == scope.row.statu).name }}
               </template>
             </el-table-column>
-            <el-table-column label="背景图url" prop="imageurl"> </el-table-column>
+            <el-table-column label="背景图" prop="imageurl" width="178px">
+              <template #default="scope">
+                <img :src="scope.row.imageurl" class="avatar">
+              </template>
+            </el-table-column>
+            <el-table-column label="识别码" prop="token"> </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
+            <el-table-column label="操作">
+              <template #default="scope">
+                <el-button
+                  size="small"
+                  type="success"
+                  @click="openedit(scope.row)">修改</el-button>
+                <el-button
+                  size="small"
+                  type="success"
+                  @click="openqrcode(scope.row.token)">显示二维码</el-button>
+                <el-button
+                  size="small"
+                  type="warning"
+                  @click="changeActivity(scope.row.id, 1)">开始活动</el-button>
+                <el-button
+                  size="small"
+                  type="danger"
+                  @click="changeActivity(scope.row.id, 2)">结束活动</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </div>
         <div style="margin-top: 30px">
@@ -74,7 +99,7 @@
     </el-dialog>
     <el-dialog :close-on-click-modal="false" title="新增/修改活动" v-model="newDialog" v-loading="newLoading">
       <div v-for="(user, index2) in userNameList" :key="index2">
-        <el-input placeholder="请输入内容" v-model="userInfoObj[user.label]" style="margin:5px;" v-if="!user.list"
+        <el-input placeholder="请输入内容" v-model="userInfoObj[user.label]" style="margin:5px;" v-if="!user.list && !user.pic"
           :show-password="(user.label == 'password' || user.label == 'confirmPassword' || user.label == 'pw' ) ? true : false">
           <template #prepend>{{user.name}}</template>
         </el-input>
@@ -82,16 +107,43 @@
           <template #prefix>{{user.name}}<el-divider direction="vertical"/></template>
           <el-option v-for="item in user.list" :key="item.value" :label="item.name" :value="item.value" />
         </el-select>
+        <div style="margin:5px;" v-if="user.pic">
+          {{user.name}}
+          <el-upload
+            class="avatar-uploader"
+            action="http://localhost:8481/api/useruploadpicture/"
+            :headers="getheader()"
+            :show-file-list="false"
+            :on-success="(res, file) => handleAvatarSuccess(res, file, user.label)"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="userInfoObj[user.label]" :src="userInfoObj[user.label]" class="avatar">
+            <el-button v-else>请上传</el-button>
+          </el-upload>
+        </div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="newDialog = false">取 消</el-button>
         <el-button type="primary" @click="newUser()">新增/修改</el-button>
       </div>
     </el-dialog>
+    <el-dialog :close-on-click-modal="false" title="二维码" v-model="qropen">
+      <vue-qr
+        :text="qrurl"
+        :size="200"
+        :margin="10"
+        colorDark="#000"
+        colorLight="#fff"
+        ref="qrcode"
+      ></vue-qr>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="qropen = false">关 闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
+import vueQr from 'vue-qr/src/packages/vue-qr.vue';
 import { ref } from 'vue'
 import { onMounted } from 'vue'
 import api from '@/api';
@@ -120,6 +172,9 @@ const machinelist = ref([
   {name: '法奥机械臂', value: 1}, 
 ]);
 
+const qrurl = ref('https://www.example.com');
+const qropen = ref(false);
+
 const tableData = ref([]);
 const allamount = ref(0);
 const loading = ref(false);
@@ -146,7 +201,7 @@ onMounted(async () => {
   userNameList.value.push({name: '状态',label: 'statu',
     list: statulist.value
   });
-  userNameList.value.push({name: '背景图',label: 'imageurl'});
+  userNameList.value.push({name: '背景图',label: 'imageurl', pic: true});
   userNameList.value.push({name: '备注',label: 'tip'});
   await getList();
   await getAdminList();
@@ -206,6 +261,12 @@ const newUser = async () => {
   }
 }
 
+const openedit = (current) => {
+  console.log(current);
+  userInfoObj.value = current;
+  newDialog.value = true;
+}
+
 const activeIndex = ref(0);
 const tabKey = ref('statu');
 const tabList = ref(['全部', '未开始', '进行中', '已结束']);
@@ -257,6 +318,47 @@ const getMachineList = async () => {
   userNameList.value[3].list = newmachinelist;
 }
 
+
+const handleAvatarSuccess = (res, file, index) => {
+  userInfoObj.value[index] = res.picurl;
+}
+const beforeAvatarUpload = (file) => {
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    this.$message.error('上传头像图片大小不能超过 2MB!');
+  }
+  return isLt2M;
+}
+const getheader = () => {
+  return {
+    'token': localStorage.getItem("machine_superadmin_userInfo")
+  }
+}
+
+const openqrcode = (token) => {
+  qrurl.value = 'http://machineapp.deaso40.com/#/?token=' + token;
+  qropen.value = true;
+}
+
+const changeActivity = async (id, statu) => {
+  try{
+    newLoading.value = true;
+    const result = await api.post('/changeactivity', {
+      obj: {
+        id: id,
+        statu: statu
+      }
+    });
+    console.log(result);
+    ElMessage('修改成功')
+    newLoading.value = false;
+    await getList();
+  }catch(e){
+    console.error(e);
+    newLoading.value = false;
+  }
+}
+
 const timestamptodate = (timestamp) => {
   if(!timestamp) return "";
   const getdate = new Date(parseInt(timestamp))
@@ -268,5 +370,9 @@ const timestamptodate = (timestamp) => {
 </script>
 
 <style scoped>
-
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>

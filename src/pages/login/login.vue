@@ -3,7 +3,7 @@
 		<div class="loginwindow">
 			<div class="rightback" v-loading="loading">
 				<div class="welcometext">
-					欢迎登录机械臂系统后台
+					欢迎登录机械臂超级管理员后台
 				</div>
 				<el-input placeholder="请输入账号" v-model="username" class="idinput">
 					<i style="color:#3a62d7;" slot="prepend" class="el-icon-user-solid"></i>

@@ -3,11 +3,11 @@
     <div class="pageback">
       <envir-page-name style="background-color: #ffffff;" :noBack="true" pageName="全局变量查询" />
       <div class="pagepadding">
-        <el-button
+        <!-- <el-button
           size="small"
           type="success"
           style="margin-left: 16px;margin-bottom: 16px;"
-          @click="searchDialog = true">筛选设置</el-button>
+          @click="searchDialog = true">筛选设置</el-button> -->
         <el-button
           size="small"
           type="warning"
@@ -22,6 +22,14 @@
             <el-table-column label="全局变量名" prop="key"> </el-table-column>
             <el-table-column label="全局变量值" prop="value"> </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
+            <el-table-column label="操作">
+              <template #default="scope">
+                <el-button
+                  size="small"
+                  type="success"
+                  @click="openedit(scope.row)">修改</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </div>
         <div style="margin-top: 30px">
@@ -160,6 +168,12 @@ const newUser = async () => {
     console.error(e);
     newLoading.value = false;
   }
+}
+
+const openedit = (current) => {
+  console.log(current);
+  userInfoObj.value = current;
+  newDialog.value = true;
 }
 
 const timestamptodate = (timestamp) => {

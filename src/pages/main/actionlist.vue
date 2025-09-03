@@ -3,11 +3,11 @@
     <div class="pageback">
       <envir-page-name style="background-color: #ffffff;" :noBack="true" pageName="动作查询" />
       <div class="pagepadding">
-        <el-button
+        <!-- <el-button
           size="small"
           type="success"
           style="margin-left: 16px;margin-bottom: 16px;"
-          @click="searchDialog = true">筛选设置</el-button>
+          @click="searchDialog = true">筛选设置</el-button> -->
         <el-button
           size="small"
           type="warning"
@@ -27,9 +27,25 @@
             </el-table-column>
             <el-table-column label="名称" prop="name"> </el-table-column>
             <el-table-column label="动作名字" prop="actionid"> </el-table-column>
-            <el-table-column label="背景图片" prop="imageurl"> </el-table-column>
-            <el-table-column label="图标" prop="iconurl"> </el-table-column>
+            <el-table-column label="背景图片" prop="imageurl" width="178px">
+              <template #default="scope">
+                <img :src="scope.row.imageurl" class="avatar">
+              </template>
+            </el-table-column>
+            <el-table-column label="图标" prop="iconurl" width="178px">
+              <template #default="scope">
+                <img :src="scope.row.iconurl" class="avatar">
+              </template>
+            </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
+            <el-table-column label="操作">
+              <template #default="scope">
+                <el-button
+                  size="small"
+                  type="success"
+                  @click="openedit(scope.row)">修改</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </div>
         <div style="margin-top: 30px">
@@ -64,7 +80,7 @@
     </el-dialog>
     <el-dialog :close-on-click-modal="false" title="新增/修改动作" v-model="newDialog" v-loading="newLoading">
       <div v-for="(user, index2) in userNameList" :key="index2">
-        <el-input placeholder="请输入内容" v-model="userInfoObj[user.label]" style="margin:5px;" v-if="!user.list"
+        <el-input placeholder="请输入内容" v-model="userInfoObj[user.label]" style="margin:5px;" v-if="!user.list && !user.pic"
           :show-password="(user.label == 'password' || user.label == 'confirmPassword' || user.label == 'pw' ) ? true : false">
           <template #prepend>{{user.name}}</template>
         </el-input>
@@ -72,6 +88,19 @@
           <template #prefix>{{user.name}}<el-divider direction="vertical"/></template>
           <el-option v-for="item in user.list" :key="item.value" :label="item.name" :value="item.value" />
         </el-select>
+        <div style="margin:5px;" v-if="user.pic">
+          {{user.name}}
+          <el-upload
+            class="avatar-uploader"
+            action="http://localhost:8481/api/useruploadpicture/"
+            :headers="getheader()"
+            :show-file-list="false"
+            :on-success="(res, file) => handleAvatarSuccess(res, file, user.label)"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="userInfoObj[user.label]" :src="userInfoObj[user.label]" class="avatar">
+            <el-button v-else>请上传</el-button>
+          </el-upload>
+        </div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="newDialog = false">取 消</el-button>
@@ -119,8 +148,8 @@ onMounted(async () => {
   userNameList.value.push({name: '设备种类',label: 'type',
     list: statulist.value });
   userNameList.value.push({name: '执行名称',label: 'actionid'});
-  userNameList.value.push({name: '大图像',label: 'imageurl'});
-  userNameList.value.push({name: '小图标',label: 'iconurl'});
+  userNameList.value.push({name: '大图像',label: 'imageurl', pic: true});
+  userNameList.value.push({name: '小图标',label: 'iconurl', pic: true});
   userNameList.value.push({name: '备注',label: 'tip'});
   await getList();
 })
@@ -178,6 +207,28 @@ const newUser = async () => {
   }
 }
 
+const openedit = (current) => {
+  console.log(current);
+  userInfoObj.value = current;
+  newDialog.value = true;
+}
+
+const handleAvatarSuccess = (res, file, index) => {
+  userInfoObj.value[index] = res.picurl;
+}
+const beforeAvatarUpload = (file) => {
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    this.$message.error('上传头像图片大小不能超过 2MB!');
+  }
+  return isLt2M;
+}
+const getheader = () => {
+  return {
+    'token': localStorage.getItem("machine_superadmin_userInfo")
+  }
+}
+
 const timestamptodate = (timestamp) => {
   if(!timestamp) return "";
   const getdate = new Date(parseInt(timestamp))
@@ -189,5 +240,9 @@ const timestamptodate = (timestamp) => {
 </script>
 
 <style scoped>
-
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>

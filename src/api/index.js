@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus'
 
-var addr = 'http://localhost:8481/api'
-// var addr = 'http://120.55.115.156:1031/api';
+// var addr = 'http://localhost:8481/api'
+var addr = 'http://39.108.167.152:8481/api';
 
 const login = async function(url, data){
   const result = await axios.post(
