@@ -27,11 +27,6 @@
             </el-table-column>
             <el-table-column label="名称" prop="name"> </el-table-column>
             <el-table-column label="动作名字" prop="actionid"> </el-table-column>
-            <el-table-column label="背景图片" prop="imageurl" width="178px">
-              <template #default="scope">
-                <img :src="scope.row.imageurl" class="avatar">
-              </template>
-            </el-table-column>
             <el-table-column label="图标" prop="iconurl" width="178px">
               <template #default="scope">
                 <img :src="scope.row.iconurl" class="avatar">
@@ -148,7 +143,6 @@ onMounted(async () => {
   userNameList.value.push({name: '设备种类',label: 'type',
     list: statulist.value });
   userNameList.value.push({name: '执行名称',label: 'actionid'});
-  userNameList.value.push({name: '大图像',label: 'imageurl', pic: true});
   userNameList.value.push({name: '小图标',label: 'iconurl', pic: true});
   userNameList.value.push({name: '备注',label: 'tip'});
   await getList();

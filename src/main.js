@@ -14,6 +14,11 @@ import pageName from "@/components/pageName";
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+router.beforeEach((to, from, next) => {
+  document.title = '机械臂系统超级管理员后台';
+  next();
+});
+
 const app = createApp(App).use().use(NutUI).use(ElementUI, {
   locale: zhLocale
 }).use(store).use(router);

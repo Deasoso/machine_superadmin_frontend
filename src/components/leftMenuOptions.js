@@ -39,8 +39,10 @@ export default [{
   "icon": "el-icon-user-solid",
   "name": "活动列表",
   "route": "activitylist",
-},{
-  "icon": "el-icon-user-solid",
-  "name": "上传图片",
-  "route": "uploadpic",
-}]
+}
+// ,{
+//   "icon": "el-icon-user-solid",
+//   "name": "上传图片",
+//   "route": "uploadpic",
+// }
+]

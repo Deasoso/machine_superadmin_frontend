@@ -31,6 +31,11 @@
             <el-table-column label="唯一ID" prop="id"> </el-table-column>
             <el-table-column label="创建人id" prop="adminid"> </el-table-column>
             <el-table-column label="管理员id列表" prop="adminidlist"> </el-table-column>
+             <el-table-column label="模式" prop="type">
+              <template #default="scope">
+                {{ typelist.find(item => item.value == scope.row.type).name }}
+              </template>
+            </el-table-column>
             <el-table-column label="名称" prop="name"> </el-table-column>
             <el-table-column label="设备id列表" prop="machineidlist"> </el-table-column>
             <el-table-column label="状态" prop="statu">
@@ -38,11 +43,26 @@
                 {{ statulist.find(item => item.value == scope.row.statu).name }}
               </template>
             </el-table-column>
+            <el-table-column label="网页图标" prop="iconurl" width="178px">
+              <template #default="scope">
+                <img :src="scope.row.iconurl" class="avatar">
+              </template>
+            </el-table-column>
             <el-table-column label="背景图" prop="imageurl" width="178px">
               <template #default="scope">
                 <img :src="scope.row.imageurl" class="avatar">
               </template>
             </el-table-column>
+            <el-table-column label="横版背景图" prop="imageurl2" width="178px">
+              <template #default="scope">
+                <img :src="scope.row.imageurl2" class="avatar">
+              </template>
+            </el-table-column>
+            <el-table-column label="图标位置" prop="yposition"> </el-table-column>
+            <el-table-column label="每行图标数" prop="actionperrow"> </el-table-column>
+            <el-table-column label="图标下文字大小" prop="fontsize"> </el-table-column>
+            <el-table-column label="图标下文字粗细" prop="fontweight"> </el-table-column>
+            <el-table-column label="图标下文字字体" prop="fontname"> </el-table-column>
             <el-table-column label="识别码" prop="token"> </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
             <el-table-column label="操作">
@@ -54,7 +74,11 @@
                 <el-button
                   size="small"
                   type="success"
-                  @click="openqrcode(scope.row.token)">显示二维码</el-button>
+                  @click="openqrcode(scope.row.token, 0)">显示竖版二维码</el-button>
+                <el-button
+                  size="small"
+                  type="success"
+                  @click="openqrcode(scope.row.token, 1)">显示横版二维码</el-button>
                 <el-button
                   size="small"
                   type="warning"
@@ -123,6 +147,8 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="newDialog = false">取 消</el-button>
+        <el-button type="success" @click="newDialog = false">预览竖版界面</el-button>
+        <el-button type="success" @click="newDialog = false">预览横版界面</el-button>
         <el-button type="primary" @click="newUser()">新增/修改</el-button>
       </div>
     </el-dialog>
@@ -162,9 +188,11 @@ const statulist = ref([
   {name: '已结束', value: 2}
 ]);
 
-const adminlist = ref([
-  {name: '乐白机械臂', value: 0}, 
-  {name: '法奥机械臂', value: 1}, 
+const adminlist = ref([]);
+
+const typelist = ref([
+  {name: '单点模式', value: 0}, 
+  {name: '排队模式', value: 1},
 ]);
 
 const machinelist = ref([
@@ -195,13 +223,23 @@ onMounted(async () => {
   userNameList.value.push({name: '活动执行人列表',label: 'adminidlist',
     list: adminlist.value, multiple: true
   });
+  userNameList.value.push({name: '模式',label: 'type',
+    list: typelist.value,
+  });
   userNameList.value.push({name: '设备列表',label: 'machineidlist',
     list: machinelist.value, multiple: true
   });
   userNameList.value.push({name: '状态',label: 'statu',
     list: statulist.value
   });
+  userNameList.value.push({name: '网页图标',label: 'iconurl', pic: true});
   userNameList.value.push({name: '背景图',label: 'imageurl', pic: true});
+  userNameList.value.push({name: '横版图片',label: 'imageurl2', pic: true});
+  userNameList.value.push({name: '图片距离',label: 'yposition'});
+  userNameList.value.push({name: '每行图片',label: 'actionperrow'});
+  userNameList.value.push({name: '图标下文字大小（默认16）',label: 'fontsize'});
+  userNameList.value.push({name: '图标下文字粗细（默认400）',label: 'fontweight'});
+  userNameList.value.push({name: '图标下文字字体',label: 'fontname'});
   userNameList.value.push({name: '备注',label: 'tip'});
   await getList();
   await getAdminList();
@@ -315,7 +353,7 @@ const getMachineList = async () => {
     })
   }
   machinelist.value = newmachinelist;
-  userNameList.value[3].list = newmachinelist;
+  userNameList.value[4].list = newmachinelist;
 }
 
 
@@ -335,8 +373,8 @@ const getheader = () => {
   }
 }
 
-const openqrcode = (token) => {
-  qrurl.value = 'http://machineapp.deaso40.com/#/?token=' + token;
+const openqrcode = (token, type) => {
+  qrurl.value = 'http://machineapp.deaso40.com/#/?token=' + token + '&type=' + type;
   qropen.value = true;
 }
 
