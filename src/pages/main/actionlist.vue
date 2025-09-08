@@ -92,7 +92,7 @@
           {{user.name}}
           <el-upload
             class="avatar-uploader"
-            action="http://localhost:8481/api/useruploadpicture/"
+            action="http://39.108.167.152:8481/api/useruploadpicture/"
             :headers="getheader()"
             :show-file-list="false"
             :on-success="(res, file) => handleAvatarSuccess(res, file, user.label)"
@@ -141,7 +141,7 @@ const newDialog = ref(false);
 
 onMounted(async () => {
   searchNameList.value = [];
-  searchNameList.value.push({name: '状态',label: 'statu', list: statulist.value });
+  searchNameList.value.push({name: '设备种类',label: 'type', list: statulist.value });
   userNameList.value = [];
   userNameList.value.push({name: '唯一id，不填则新增',label: 'id'});
   userNameList.value.push({name: '名称',label: 'name'});

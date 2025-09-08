@@ -111,7 +111,7 @@
           {{user.name}}
           <el-upload
             class="avatar-uploader"
-            action="http://localhost:8481/api/useruploadpicture/"
+            action="http://39.108.167.152:8481/api/useruploadpicture/"
             :headers="getheader()"
             :show-file-list="false"
             :on-success="(res, file) => handleAvatarSuccess(res, file, user.label)"

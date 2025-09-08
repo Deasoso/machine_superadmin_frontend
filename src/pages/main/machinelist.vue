@@ -158,6 +158,7 @@ onMounted(async () => {
   });
   userNameList.value.push({name: '备注',label: 'tip'});
   await getList();
+  await getActionList();
 })
 
 const handleSizeChange = (val) => {
