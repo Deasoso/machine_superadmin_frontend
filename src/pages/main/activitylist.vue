@@ -63,6 +63,13 @@
             <el-table-column label="图标下文字大小" prop="fontsize"> </el-table-column>
             <el-table-column label="图标下文字粗细" prop="fontweight"> </el-table-column>
             <el-table-column label="图标下文字字体" prop="fontname"> </el-table-column>
+            <el-table-column label="图标下字体颜色" prop="fontcolor" width="178px">
+              <template #default="scope">
+                <div :style="{color: scope.row.fontcolor}">
+                  示例颜色
+                </div>
+              </template>
+            </el-table-column>
             <el-table-column label="识别码" prop="token"> </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
             <el-table-column label="操作">
@@ -123,7 +130,7 @@
     </el-dialog>
     <el-dialog :close-on-click-modal="false" title="新增/修改活动" v-model="newDialog" v-loading="newLoading">
       <div v-for="(user, index2) in userNameList" :key="index2">
-        <el-input placeholder="请输入内容" v-model="userInfoObj[user.label]" style="margin:5px;" v-if="!user.list && !user.pic"
+        <el-input placeholder="请输入内容" v-model="userInfoObj[user.label]" style="margin:5px;" v-if="!user.list && !user.pic && !user.color"
           :show-password="(user.label == 'password' || user.label == 'confirmPassword' || user.label == 'pw' ) ? true : false">
           <template #prepend>{{user.name}}</template>
         </el-input>
@@ -144,11 +151,15 @@
             <el-button v-else>请上传</el-button>
           </el-upload>
         </div>
+        <div v-if="user.color">
+          {{user.name}}
+          <el-color-picker v-model="userInfoObj[user.label]"/>
+        </div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="newDialog = false">取 消</el-button>
-        <el-button type="success" @click="newDialog = false">预览竖版界面</el-button>
-        <el-button type="success" @click="newDialog = false">预览横版界面</el-button>
+        <el-button type="success" @click="seeActivity(0)">预览竖版界面</el-button>
+        <el-button type="success" @click="seeActivity(1)">预览横版界面</el-button>
         <el-button type="primary" @click="newUser()">新增/修改</el-button>
       </div>
     </el-dialog>
@@ -236,10 +247,11 @@ onMounted(async () => {
   userNameList.value.push({name: '背景图',label: 'imageurl', pic: true});
   userNameList.value.push({name: '横版图片',label: 'imageurl2', pic: true});
   userNameList.value.push({name: '图片距离',label: 'yposition'});
-  userNameList.value.push({name: '每行图片',label: 'actionperrow'});
+  userNameList.value.push({name: '每行动作数量',label: 'actionperrow'});
   userNameList.value.push({name: '图标下文字大小（默认16）',label: 'fontsize'});
   userNameList.value.push({name: '图标下文字粗细（默认400）',label: 'fontweight'});
   userNameList.value.push({name: '图标下文字字体',label: 'fontname'});
+  userNameList.value.push({name: '图标下文字颜色',label: 'fontcolor',color: true});
   userNameList.value.push({name: '备注',label: 'tip'});
   await getList();
   await getAdminList();
@@ -291,6 +303,27 @@ const newUser = async () => {
     ElMessage('创建成功')
     userInfoObj.value = {};
     newDialog.value = false;
+    newLoading.value = false;
+    await getList();
+  }catch(e){
+    console.error(e);
+    newLoading.value = false;
+  }
+}
+const seeActivity = async (type) => {
+  try{
+    newLoading.value = true;
+    const result = await api.post('/addactivity', {
+      obj: userInfoObj.value
+    });
+    console.log(result);
+    const result2 = await api.post('/searchactivity', {
+      searchObj: {
+        id: result.newactivity[0]
+      }
+    });
+    if(!userInfoObj.value.id) userInfoObj.value.id = result2.result.rows[0].id;
+    window.open('http://machineapp.deaso40.com/#/?token2=' + result2.result.rows[0].token2 + '&type=' + type, '_blank');
     newLoading.value = false;
     await getList();
   }catch(e){
