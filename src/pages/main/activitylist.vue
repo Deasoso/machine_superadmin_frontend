@@ -355,7 +355,8 @@ const getMachineList = async () => {
   const { result } = await api.post('/searchmachine', {
     searchObj: {
       type: userInfoObj.value.type
-    }
+    },
+    limit: 9999
   });
   console.log(result);
   var newmachinelist = [];

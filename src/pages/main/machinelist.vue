@@ -37,7 +37,14 @@
               </template>
             </el-table-column>
             <el-table-column label="设备ip" prop="ip"> </el-table-column>
-            <el-table-column label="动作列表" prop="actionlist"> </el-table-column>
+            <el-table-column label="动作列表" prop="actionlist">
+              <template #default="scope">
+                <span v-for="action, index in scope.row.actionlist">
+                  {{ actionlist.find(item => item.value == action) ? actionlist.find(item => item.value == action).name : 'aa' }}
+                  {{ index == scope.row.actionlist.length - 1 ? "" : ","}}
+                </span>
+              </template>
+            </el-table-column>
             <el-table-column label="状态" prop="statu">
               <template #default="scope">
                 {{ statulist2.find(item => item.value == scope.row.statu).name }}
@@ -149,7 +156,7 @@ onMounted(async () => {
   userNameList.value.push({name: '种类',label: 'type', 
     list: statulist.value 
   });
-  userNameList.value.push({name: '设备ip',label: 'ip'});
+  userNameList.value.push({name: '设备ip（法奥一般为192.168.58.2）',label: 'ip'});
   userNameList.value.push({name: '动作列表',label: 'actionlist',
     list: actionlist.value, multiple: true
   });
@@ -228,17 +235,19 @@ const selectchange = async (value) => {
 const getActionList = async () => {
   const { result } = await api.post('/searchaction', {
     searchObj: {
-      type: userInfoObj.value.type
-    }
+      type: userInfoObj.value.type,
+    },
+    limit: 9999
   });
   console.log(result);
   var newactionlist = [];
   for(const index in result.rows){
     newactionlist.push({
       name: result.rows[index].name,
-      value: result.rows[index].actionid
+      value: result.rows[index].id
     })
   }
+  console.log(newactionlist);
   actionlist.value = newactionlist;
   userNameList.value[4].list = newactionlist;
 }
