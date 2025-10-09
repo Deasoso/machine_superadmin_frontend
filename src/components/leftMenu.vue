@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import api from '@/api';
 import options from './leftMenuOptions.js'
 
 export default {
@@ -54,8 +55,16 @@ export default {
 			this.isCollapse = !this.isCollapse;
 		}
 	},
-	mounted(){
+	async mounted(){
 		this.options = options;
+		try{
+			const { result } = await api.post('/searchadmin', {});
+			console.log(result);
+			this.options = options;
+		}catch(e){
+			console.log(e)
+			this.options = options.slice(0, 1).concat(options.slice(2))
+		}
 	}
 };
 </script>

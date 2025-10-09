@@ -30,9 +30,9 @@
             style="width: 100%">
             <el-table-column label="唯一ID" prop="id"> </el-table-column>
             <el-table-column label="创建人id" prop="adminid"> </el-table-column>
-            <el-table-column label="管理员id列表" prop="adminidlist"> </el-table-column>
              <el-table-column label="模式" prop="type">
               <template #default="scope">
+                <!-- {{ scope.row.type }} -->
                 {{ typelist.find(item => item.value == scope.row.type).name }}
               </template>
             </el-table-column>
@@ -40,7 +40,32 @@
             <el-table-column label="设备id列表" prop="machineidlist"> </el-table-column>
             <el-table-column label="状态" prop="statu">
               <template #default="scope">
+                <!-- {{ scope.row.statu }} -->
                 {{ statulist.find(item => item.value == scope.row.statu).name }}
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="160">
+              <template #default="scope">
+                <el-button
+                  size="small"
+                  type="success"
+                  @click="openedit(scope.row)">修改</el-button>
+                <el-button
+                  size="small"
+                  type="success"
+                  @click="openqrcode(scope.row.token, 0)">显示竖版二维码</el-button>
+                <el-button
+                  size="small"
+                  type="success"
+                  @click="openqrcode(scope.row.token, 1)">显示横版二维码</el-button>
+                <el-button
+                  size="small"
+                  type="warning"
+                  @click="changeActivity(scope.row.id, 1)">开始活动</el-button>
+                <el-button
+                  size="small"
+                  type="danger"
+                  @click="changeActivity(scope.row.id, 2)">结束活动</el-button>
               </template>
             </el-table-column>
             <el-table-column label="网页图标" prop="iconurl" width="178px">
@@ -70,32 +95,9 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="识别码" prop="token"> </el-table-column>
+            <!-- <el-table-column label="识别码" prop="token"> </el-table-column> -->
+            <el-table-column label="法奥转发电脑ip" prop="forwardip"> </el-table-column>
             <el-table-column label="备注" prop="tip"> </el-table-column>
-            <el-table-column label="操作">
-              <template #default="scope">
-                <el-button
-                  size="small"
-                  type="success"
-                  @click="openedit(scope.row)">修改</el-button>
-                <el-button
-                  size="small"
-                  type="success"
-                  @click="openqrcode(scope.row.token, 0)">显示竖版二维码</el-button>
-                <el-button
-                  size="small"
-                  type="success"
-                  @click="openqrcode(scope.row.token, 1)">显示横版二维码</el-button>
-                <el-button
-                  size="small"
-                  type="warning"
-                  @click="changeActivity(scope.row.id, 1)">开始活动</el-button>
-                <el-button
-                  size="small"
-                  type="danger"
-                  @click="changeActivity(scope.row.id, 2)">结束活动</el-button>
-              </template>
-            </el-table-column>
           </el-table>
         </div>
         <div style="margin-top: 30px">
@@ -199,8 +201,6 @@ const statulist = ref([
   {name: '已结束', value: 2}
 ]);
 
-const adminlist = ref([]);
-
 const typelist = ref([
   {name: '单点模式', value: 0}, 
   {name: '排队模式', value: 1},
@@ -231,9 +231,6 @@ onMounted(async () => {
   userNameList.value = [];
   userNameList.value.push({name: '唯一id，不填则新增',label: 'id'});
   userNameList.value.push({name: '名称',label: 'name'});
-  userNameList.value.push({name: '活动执行人列表',label: 'adminidlist',
-    list: adminlist.value, multiple: true
-  });
   userNameList.value.push({name: '模式',label: 'type',
     list: typelist.value,
   });
@@ -252,9 +249,9 @@ onMounted(async () => {
   userNameList.value.push({name: '图标下文字粗细（默认400）',label: 'fontweight'});
   userNameList.value.push({name: '图标下文字字体',label: 'fontname'});
   userNameList.value.push({name: '图标下文字颜色',label: 'fontcolor',color: true});
+  userNameList.value.push({name: '法奥转发电脑ip',label: 'forwardip'});
   userNameList.value.push({name: '备注',label: 'tip'});
   await getList();
-  await getAdminList();
   await getMachineList();
 })
 
@@ -319,9 +316,10 @@ const seeActivity = async (type) => {
     console.log(result);
     const result2 = await api.post('/searchactivity', {
       searchObj: {
-        id: result.newactivity[0]
+        id: userInfoObj.value.id
       }
     });
+    console.log(result2);
     if(!userInfoObj.value.id) userInfoObj.value.id = result2.result.rows[0].id;
     window.open('http://machineapp.deaso40.com/#/?token2=' + result2.result.rows[0].token2 + '&type=' + type, '_blank');
     newLoading.value = false;
@@ -353,24 +351,6 @@ const handleClick = (tab) => {
   console.log(searchObj.value);
 }
 
-const getAdminList = async () => {
-  const { result } = await api.post('/searchadmin', {
-    searchObj: {
-      type: userInfoObj.value.type
-    }
-  });
-  console.log(result);
-  var newadminlist = [];
-  for(const index in result.rows){
-    newadminlist.push({
-      name: result.rows[index].name,
-      value: result.rows[index].id
-    })
-  }
-  adminlist.value = newadminlist;
-  userNameList.value[2].list = newadminlist;
-}
-
 const getMachineList = async () => {
   const { result } = await api.post('/searchmachine', {
     searchObj: {
@@ -386,7 +366,7 @@ const getMachineList = async () => {
     })
   }
   machinelist.value = newmachinelist;
-  userNameList.value[4].list = newmachinelist;
+  userNameList.value[3].list = newmachinelist;
 }
 
 

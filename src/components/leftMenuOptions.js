@@ -23,11 +23,13 @@ export default [{
   "icon": "el-icon-user-solid",
   "name": "管理员列表",
   "route": "adminlist",
-},{
-  "icon": "el-icon-user-solid",
-  "name": "全局变量",
-  "route": "globallist",
-},{
+}
+// ,{
+//   "icon": "el-icon-user-solid",
+//   "name": "全局变量",
+//   "route": "globallist",
+// }
+,{
   "icon": "el-icon-user-solid",
   "name": "动作列表",
   "route": "actionlist",
